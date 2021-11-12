@@ -1,0 +1,131 @@
+ {% extends 'dashboard/layout.html' %}
+
+
+{% block titlepage %} Mixed Chart {% endblock %}
+
+
+
+{% block MainContent %}  
+
+<div class="container" style="max-width: 100% ; margin-top:30px; "
+    <div class="row">
+    
+        {% comment %} <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4" style=" text-align : center ; border : 1px solid black ">
+                <form action="" method="POST" style=" ; margin = 20 px ; padding : 10px">
+                {% csrf_token %}
+                {{form.Lesson}}
+                <input type="text" name="Score" style=" width : 90% ; margin : 10px ;">
+                <input type="submit" class=" btn btn-success" value="save" style=" width : 90% ; margin : 10px ;">
+                
+                
+                </form>
+            </div>
+            <div class="col-md-4"></div>
+        </div> {% endcomment %}
+        <div class="row">
+            <div class="col-md-4">
+            <input type='button' value='update pr1' class='btn btn-success' onclick="updatedata1()"><br><br>
+            <input type='button' value='update pr2' class='btn btn-danger' onclick="updatedata2()"><br><br>
+            <input type='button' value='push' class='btn ' onclick="pushlabel()">
+            <input type='button' value='pop' class='btn ' onclick="poplabel()">
+            </div>
+            <div class="col-md-4" style=" text-align : center ; border : 1px solid black ">
+
+
+
+
+
+
+                <canvas id="myChart" width="700" height="400"></canvas>
+                <script>
+                const myResult = JSON.parse("{{ result | escapejs }}")
+                const ctx = document.getElementById('myChart').getContext('2d');
+                const mixedchart = new Chart(ctx, {
+                    
+                    data: {
+                        labels: Object.keys(myResult),
+                        datasets: [{
+                                    type: 'bar',
+                                    label: 'product 1',
+                                    data: Object.values(myResult).map(v=>v[0]),
+                                    backgroundColor: ['rgba(0, 220, 20, 0.3)'],
+                                    borderColor: ['rgba(0, 255, 20, 1)'],
+                                    borderWidth: 1
+                                }
+                                ,
+                                {
+
+                                    type: 'line',
+                                    label: 'product 2',
+                                    data: Object.values(myResult).map(v=>v[1]),
+                                    backgroundColor: ['rgba(255, 100, 100, 1)'],
+                                    borderColor: ['rgba(255, 20, 10, 1)'],
+                                    borderWidth: 1
+                                }]
+          
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+                var con=3 ;
+                var mlist = ['January' , 'February' , 'March' , 'April' , 'May' , 'June ' , 'July' , 'August' , 'September' , 'October' , 'November' , 'December'];
+                function updatedata1()
+                {
+
+                    mixedchart.data.datasets[0].data=[0 , 23,14,18,0,20,14,0,12,0,11,0];
+                    mixedchart.update()     
+
+                }
+
+                function updatedata2()
+                {
+
+                    mixedchart.data.datasets[1].data=[0 , 23,14,18,0,20,14,0,12,0,11,0];
+                    mixedchart.update()     
+
+                }
+
+                function pushlabel()
+                {
+                    mixedchart.data.labels.push(mlist[con++]) 
+                    mixedchart.update()
+
+
+                }
+
+
+                function poplabel()
+                {
+                    mixedchart.data.labels.pop() 
+                    con-=1
+                    mixedchart.update()
+
+
+                }
+                
+
+
+                </script>
+
+
+
+
+
+
+
+
+
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
